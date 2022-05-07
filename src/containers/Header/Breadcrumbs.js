@@ -12,9 +12,7 @@ const breadcrumbNameMap = {
 
 const HeaderBreadcrumbs = () => {
   const history = useHistory();
-  var User = history.location.state?.existUser;
-  var Asset = history.location.state?.existAsset;
-  var Assignment = history.location.state?.existAssignment;
+  var Course = history.location.state?.existCourse;
 
   const location = useLocation();
   const breadCrumbView = () => {
@@ -37,7 +35,7 @@ const HeaderBreadcrumbs = () => {
             // const last = index === pathnames.length - 1;
             const to = `/${pathnames.slice(0, index + 1).join("/")}`;
 
-            if (User || Asset || Assignment) {
+            if (Course) {
               const last = index === pathnames.length - 2;
               
               if (last) {

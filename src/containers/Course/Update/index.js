@@ -13,13 +13,15 @@ const UpdateCourseContainer = () => {
     if (existCourse) {
       setCourse({
         id: existCourse.id,
-        name: existCourse.name, 
+        name: existCourse.name,
+        tuition: existCourse.tuition,
+        startDate: existCourse.startDate.toDate(),
+        duration: existCourse.duration,
+        studyCondition: existCourse.studyCondition,
+        studyObject: existCourse.studyObject,
         content: existCourse.content,
         detail: existCourse.detail,
-        startDate: existCourse.startDate.toDate(),
-        endDate: existCourse.endDate.toDate(),
-        tuition: existCourse.tuition,
-        studyCondition: existCourse.studyCondition,
+        state: existCourse.state,
       });
     }
   }, [existCourse]);
@@ -41,11 +43,8 @@ const UpdateCourseContainer = () => {
   
           />)
         }
-      </div>
+        </div>
 
-        {/* <div className="row">
-          {course && (<CourseForm initialCourseForm={course} />)}
-        </div> */}
       </div>
     </>
   )

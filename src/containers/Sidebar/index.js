@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 import { NavLink } from "react-router-dom";
-import { HOME, COURSE } from "../../constants/pages";
+import { HOME, COURSE, TEACHER } from "../../constants/pages";
 
 
 const Sidebar = () => {
@@ -30,6 +30,11 @@ const Sidebar = () => {
           <li className="row">
             <NavLink to={COURSE} activeClassName="active" className="link">
               <div className="title">Quản lý khóa học</div>
+            </NavLink>
+          </li>
+          <li className="row">
+            <NavLink to={TEACHER} activeClassName="active" className="link">
+              <div className="title">Quản lý giảng viên</div>
             </NavLink>
           </li>
           {/* {userData.type === "Admin" ? (

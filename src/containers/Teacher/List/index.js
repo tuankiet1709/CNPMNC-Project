@@ -4,31 +4,31 @@ import { Search } from "react-feather";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 
 import { Link } from "react-router-dom";
-import CourseTable from "./CourseTable";
-import { CREATE_COURSE } from "../../../constants/pages"
+import TeacherTable from "./TeacherTable";
+import { CREATE_TEACHER } from "../../../constants/pages"
 
-import { getCourse } from "../services/request"
+import { getTeacher } from "../services/request"
 
 import { 
   ACCSENDING, 
   DECSENDING, 
-  DEFAULT_COURSE_SORT_COLUMN_NAME,
+  DEFAULT_TEACHER_SORT_COLUMN_NAME,
   DEFAULT_PAGE_LIMIT
 } from "../../../constants/paging"
 
-import { CourseStateFilters } from "../../../constants/selectOptions"
-import {All, AllLabel} from "../../../constants/Course/CourseStateConstant"
+import { TeacherStateFilters } from "../../../constants/selectOptions"
+import {All, AllLabel} from "../../../constants/Teacher/TeacherStateConstant"
 
-const ListCourse = () => {
+const ListTeacher = () => {
   const [query, setQuery] = useState({
     page: 1,
     limit: DEFAULT_PAGE_LIMIT,
     sortOrder: ACCSENDING,
-    sortColumn: DEFAULT_COURSE_SORT_COLUMN_NAME
+    sortColumn: DEFAULT_TEACHER_SORT_COLUMN_NAME
   });
 
   const [search, setSearch] = useState("");
-  const [courses, setCourses] = useState([]);
+  const [teachers, setTeachers] = useState([]);
 
   const [selectedType, setSelectedType] = useState([
     { id: 1, label:AllLabel , value: All },
@@ -41,7 +41,7 @@ const ListCourse = () => {
         states: [],
       });
 
-      setSelectedType([CourseStateFilters[0]]);
+      setSelectedType([TeacherStateFilters[0]]);
       return;
     }
 
@@ -101,22 +101,22 @@ const ListCourse = () => {
   };
 
   const fetchDataCallbackAsync = async () =>  {
-    let data = await getCourse(query);
+    let data = await getTeacher(query);
     // console.log('fetchDataCallbackAsync');
     // console.log("fetch")
-    // setCourses(data);
+    // setTeachers(data);
     console.log("fetch")
     console.log(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    setCourses(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    setTeachers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   }
 
   useEffect(() => {
     async function fetchDataAsync() {
-      let result = await getCourse(query);
-      // setCourses(result);
+      let result = await getTeacher(query);
+      // setTeachers(result);
       // console.log("result");
       // console.log(result);
-      setCourses(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setTeachers(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       console.log("result");
       console.log(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
@@ -126,13 +126,13 @@ const ListCourse = () => {
 
   return (
     <>
-      <div className="primaryColor text-title intro-x">Danh sách khóa học</div>
+      <div className="primaryColor text-title intro-x">Danh sách giảng viên</div>
 
       <div>
         <div className="d-flex mb-5 intro-x">
           <div className="d-flex align-items-center w-md mr-5">
           <ReactMultiSelectCheckboxes
-              options={CourseStateFilters}
+              options={TeacherStateFilters}
               hideSearch={true}
               placeholderButtonLabel="State"
               value={selectedType}
@@ -159,14 +159,14 @@ const ListCourse = () => {
           </div>
 
           <div className="d-flex align-items-center ml-3">
-            <Link to={CREATE_COURSE} state="button" className="btn btn-danger">
-              Tạo khóa học mới
+            <Link to={CREATE_TEACHER} state="button" className="btn btn-danger">
+              Thêm giảng viên
             </Link>
           </div>
         </div>
 
-        <CourseTable
-          courses={courses}
+        <TeacherTable
+          teachers={teachers}
           handlePage={handlePage}
           handleSort={handleSort}
           sortState={{
@@ -180,4 +180,4 @@ const ListCourse = () => {
   );
 };
 
-export default ListCourse;
+export default ListTeacher;

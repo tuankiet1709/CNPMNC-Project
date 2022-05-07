@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { FunnelFill } from "react-bootstrap-icons";
+import { FunnelFill, CalendarDateFill } from "react-bootstrap-icons";
 import { Search } from "react-feather";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
+import DateFieldMonth from "../../../components/FormInputs/DateFieldMonth"
 
 import { Link } from "react-router-dom";
 import CourseTable from "./CourseTable";
@@ -100,6 +101,16 @@ const ListCourse = () => {
     });
   };
 
+  function handleDateChange(date) {
+    date.setHours(date.getHours() + 8);
+    console.log(date.toISOString());
+    setQuery({
+      ...query,
+      assignedDate: date,
+      page: 1,
+    });
+  }
+
   const fetchDataCallbackAsync = async () =>  {
     let data = await getCourse(query);
     // console.log('fetchDataCallbackAsync');
@@ -126,12 +137,12 @@ const ListCourse = () => {
 
   return (
     <>
-      <div className="primaryColor text-title intro-x">Danh sách khóa học</div>
+      <div className="primaryColor text-title intro-x">Báo cáo khóa học</div>
 
       <div>
         <div className="d-flex mb-5 intro-x">
           <div className="d-flex align-items-center w-md mr-5">
-          <ReactMultiSelectCheckboxes
+            <ReactMultiSelectCheckboxes
               options={CourseStateFilters}
               hideSearch={true}
               placeholderButtonLabel="State"
@@ -141,6 +152,33 @@ const ListCourse = () => {
 
             <div className="border p-2">
               <FunnelFill />
+            </div>
+          
+            
+          </div>
+
+          <div className="d-flex align-items-center w-md ">
+            <div className="d-flex justify-content-center">
+              <div className="mt-2 row">
+                <div className="col">
+                  <label className="border d-flex align-items-center w-100">
+                    <DateFieldMonth
+                      id="reportMonth"
+                      name="reportMonth"
+                      label="Tháng báo cáo"
+                      selected={query.assignedDate}
+                      onChange={handleDateChange}
+                      dateFormat="dd/MM/yyyy"
+                    />
+                    <div
+                      className="p-2 border border-l border-5"
+                      style={{ justifyContent: "space-around" }}
+                    >
+                      <CalendarDateFill />
+                    </div>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -156,12 +194,6 @@ const ListCourse = () => {
                 <Search />
               </span>
             </div>
-          </div>
-
-          <div className="d-flex align-items-center ml-3">
-            <Link to={CREATE_COURSE} state="button" className="btn btn-danger">
-              Tạo khóa học mới
-            </Link>
           </div>
         </div>
 

@@ -6,37 +6,58 @@ import { NotificationManager } from "react-notifications";
 
 import Table, { SortType } from "../../../components/Table";
 import Info from "../Info";
-import { EDIT_COURSE_ID } from "../../../constants/pages";
+import { EDIT_TEACHER_ID } from "../../../constants/pages";
 import ConfirmModal from "../../../components/ConfirmModal";
-import { DeleteCourseRequest } from "../services/request"
 import {
-  NotStart,
-  InProcess,
-  IsEnded,
-  NotStartLabel,
-  InProcessLabel,
-  IsEndedLabel,
+  IsTeaching,
+  TakeABreak,
+  StopTeaching,
+  IsTeachingLabel,
+  TakeABreakLabel,
+  StopTeachingLabel,
   IsDeletedLabel,
-} from "../../../constants/Course/CourseStateConstant"
+} from "../../../constants/Teacher/TeacherStateConstant";
+
+import {
+  GenderMale,
+  GenderFemaleLabel,
+  GenderMaleLabel
+} from "../../../constants/Teacher/GenderContants";
+
+import {
+  Primary,
+  Intermediate,
+  Colleges,
+  University,
+  Master,
+  Doctor,
+  PrimaryLabel,
+  IntermediateLabel,
+  CollegesLabel,
+  UniversityLabel,
+  MasterLabel,
+  DoctorLabel,
+} from "../../../constants/Teacher/QualificationConstants";
 
 const columns = [
   { columnName: "STT", columnValue: "" },
-  { columnName: "Tên khóa học", columnValue: "name" },
-  { columnName: "Ngày bắt đầu", columnValue: "startDate" },
-  { columnName: "Thời gian học", columnValue: "duration" },
-  { columnName: "Học phí", columnValue: "tuition" },
+  { columnName: "Họ", columnValue: "lastName" },
+  { columnName: "Tên", columnValue: "firstName" },
+  { columnName: "Giới tính", columnValue: "gender" },
+  { columnName: "Ngày sinh", columnValue: "dob" },
+  { columnName: "Trình độ chuyên môn", columnValue: "qualification"},
   { columnName: "Tình trạng", columnValue: "state"},
 ];
 
-const CourseTable = ({
-  courses,
+const TeacherTable = ({
+  teachers,
   handlePage,
   handleSort,
   sortState,
   fetchData,
 }) => {
   const [showDetail, setShowDetail] = useState(false);
-  const [courseDetail, setCourseDetail] = useState(null);
+  const [teacherDetail, setTeacherDetail] = useState(null);
   const [disableState, setDisable] = useState({
     isOpen: false,
     id: 0,
@@ -45,16 +66,16 @@ const CourseTable = ({
     isDisable: true,
   });
 
-  const getCourseState = (id) => {
+  const getTeacherState = (id) => {
     switch(id) {
-      case NotStart:
-      return NotStartLabel;
+      case IsTeaching:
+      return IsTeachingLabel;
         break;
-      case InProcess:
-        return InProcessLabel;
+      case TakeABreak:
+        return TakeABreakLabel;
         break;
-      case IsEnded:
-        return IsEndedLabel;
+      case StopTeaching:
+        return StopTeachingLabel;
         break;
       default:
         return IsDeletedLabel;
@@ -63,11 +84,39 @@ const CourseTable = ({
     
   }
 
-  const handleShowInfo = (id) => {
-    const course = courses.find((item) => item.id === id);
+  const getTeacherQualification = (id) => {
+    switch(id) {
+      case Primary:
+      return PrimaryLabel;
+        break;
+      case Intermediate:
+        return IntermediateLabel;
+        break;
+      case Colleges:
+        return CollegesLabel;
+        break;
+      case University:
+        return UniversityLabel;
+        break;
+      case Master:
+        return MasterLabel;
+        break;
+      default:
+        return DoctorLabel;
+        break;
+    }
+    
+  }
 
-    if (course) {
-      setCourseDetail(course);
+  const getGender = (id) => {
+    return id == GenderMale?GenderMaleLabel:GenderFemaleLabel;
+  }
+
+  const handleShowInfo = (id) => {
+    const teacher = teachers.find((item) => item.id === id);
+
+    if (teacher) {
+      setTeacherDetail(teacher);
       setShowDetail(true);
     }
   };
@@ -104,19 +153,19 @@ const CourseTable = ({
     } else {
       setDisable({
         ...disableState,
-        title: "Can not disable Course",
+        title: "Can not disable Teacher",
         message,
         isDisable: result,
       });
     }
   };
 
-  const handleConfirmDisable = async () => {
-    let isSuccess = await DeleteCourseRequest(disableState.id);
-    if (isSuccess) {
-      await handleResult(true, '');
-    }
-  };
+  // const handleConfirmDisable = async () => {
+  //   let isSuccess = await DeleteTeacherRequest(disableState.id);
+  //   if (isSuccess) {
+  //     await handleResult(true, '');
+  //   }
+  // };
 
   const handleCloseDetail = () => {
     setShowDetail(false);
@@ -124,10 +173,10 @@ const CourseTable = ({
 
   const history = useHistory();
   const handleEdit = (id) => {
-    const existCourse = courses?.find((item) => item.id === id);
-    console.log(existCourse);
-    history.push(EDIT_COURSE_ID(id), {
-      existCourse: existCourse,
+    const existTeacher = teachers?.find((item) => item.id === id);
+    console.log(existTeacher);
+    history.push(EDIT_TEACHER_ID(id), {
+      existTeacher: existTeacher,
     });
   };
 
@@ -138,38 +187,36 @@ const CourseTable = ({
         handleSort={handleSort}
         sortState={sortState}
         page={{
-          currentPage: courses?.currentPage,
-          totalPage: courses?.totalPages,
+          currentPage: teachers?.currentPage,
+          totalPage: teachers?.totalPages,
           handleChange: handlePage,
         }}
       >
-        {courses &&
-          courses?.map((data, index) => (
+        {teachers &&
+          teachers?.map((data, index) => (
             <tr
               key={index}
               className=""
               onClick={() => handleShowInfo(data.id)}
             >
               <td className="text-center">{index + 1}</td>
-              <td>{data.name}</td>
-              <td>{data.startDate.toDate().toLocaleDateString("vi-VN")}</td>
-              <td>{data.duration} Buổi</td>
-              <td>{data.tuition.toLocaleString('it-IT', {style : 'currency', currency : 'VND'})}</td>
-              <td>{getCourseState(data.state)}</td>
+              <td>{data.lastName}</td>
+              <td>{data.firstName}</td>
+              <td>{getGender(data.gender)}</td>
+              <td>{data.dob.toDate().toLocaleDateString("vi-VN")}</td>
+              <td>{getTeacherQualification(data.qualification)}</td>
+              <td>{getTeacherState(data.state)}</td>
 
               <td className="d-flex">
-                <ButtonIcon onClick={() => handleEdit(data.id)} disable={(data.state === 3 || data.state === 4) ? true:false}>
+                <ButtonIcon onClick={() => handleEdit(data.id)} disable={data.state===3?true:false}>
                   <PencilFill className="text-black" />
-                </ButtonIcon>
-                <ButtonIcon onClick={() => handleShowDisable(data.id)} disable={(data.state === 3 || data.state === 4) ? true:false}>
-                  <XCircle className="text-danger mx-2" />
                 </ButtonIcon>
               </td>
             </tr>
           ))}
       </Table>
-      {courseDetail && showDetail && (
-        <Info course={courseDetail} handleClose={handleCloseDetail} />
+      {teacherDetail && showDetail && (
+        <Info teacher={teacherDetail} handleClose={handleCloseDetail} />
       )}
       <ConfirmModal
         title={disableState.title}
@@ -182,7 +229,7 @@ const CourseTable = ({
             <div className="text-center mt-3">
               <button
                 className="btn btn-danger mr-3"
-                onClick={handleConfirmDisable}
+                // onClick={handleConfirmDisable}
                 type="button"
               >
                 Xóa khóa học
@@ -203,4 +250,4 @@ const CourseTable = ({
   );
 };
 
-export default CourseTable;
+export default TeacherTable;

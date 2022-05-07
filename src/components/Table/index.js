@@ -5,7 +5,7 @@ import "../../styles/Table.css";
 import Paging, { PageType } from "./Paging";
 
 const ColumnIcon = ({ colValue, sortState }) => {
-  if (colValue === sortState.columnValue && sortState.orderBy === "Decsending")
+  if (colValue === sortState.columnValue && sortState.orderBy === "desc")
     return <CaretUpFill />;
 
   return <CaretDownFill />;

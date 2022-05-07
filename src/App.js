@@ -9,7 +9,7 @@ import {NotificationContainer} from 'react-notifications';
 import Sidebar from "./containers/Sidebar/index";
 import { CssBaseline, Grid } from "@mui/material";
 import Header from "./containers/Header/Header";
-import { HOME, COURSE } from "./constants/pages.js";
+import { HOME, COURSE, TEACHER } from "./constants/pages.js";
 import "./styles/App.css"
 import "./styles/CheckBoxOption.css"
 import "./styles/ClickToShow.css"
@@ -23,6 +23,7 @@ import "./styles/Table.css"
 
 const Home = lazy(() => import('./containers/Home'));
 const Course = lazy(() => import('./containers/Course'));
+const Teacher = lazy(() => import('./containers/Teacher'));
 
 const SusspenseLoading = ({ children }) => (
   <Suspense fallback={<InLineLoader />}>{children}</Suspense>
@@ -30,7 +31,7 @@ const SusspenseLoading = ({ children }) => (
 
 function App() {
   useEffect(() => {
-    document.title = "Online Assset Management";
+    document.title = "CNPMNC";
   }, []);
 
   return (
@@ -53,6 +54,9 @@ function App() {
               </Route>
               <Route path={COURSE}>
                 <Course />
+              </Route>
+              <Route path={TEACHER}>
+                <Teacher />
               </Route>
             </Switch>
           </SusspenseLoading>

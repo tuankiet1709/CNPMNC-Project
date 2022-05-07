@@ -8,37 +8,40 @@ import TextField from "../../components/FormInputs/TextField";
 import DateField from "../../components/FormInputs/DateField";
 import TextAreaField from "../../components/FormInputs/TextAreaField";
 
+import SelectField from "../../components/FormInputs/SelectField"
+
 import { createCourseRequest, updateCourseRequest } from "./services/request";
+import { CourseStateOptions } from "../../constants/selectOptions"
+import {NotStart} from "../../constants/Course/CourseStateConstant"
 
 const initialFormValues = {
-  name: "",
-  tuition: undefined,
-  startDate: undefined,
-  endDate: undefined,
-  studyCondition: "",
-  content: "",
-  detail: "",
+    name: "",
+    tuition: undefined,
+    startDate: undefined,
+    duration: undefined,
+    studyCondition: "",
+    studyObject: "",
+    content: "",
+    detail: "",
+    state: NotStart,
+
 };
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Mời nhập tên khóa học"),
-  content: Yup.string().required("Mời nhập nội dung khóa học"),
-  tuition: Yup.string().required("Mời nhập học phí"),
-  detail: Yup.string().required("Mời nhập chi tiết khóa học"),
-  studyCondition: Yup.string().required("Mời nhập điều kiện học"),
-  startDate: Yup.date()
+    name: Yup.string().required("Mời nhập tên khóa học"),
+    content: Yup.string().required("Mời nhập nội dung khóa học"),
+    tuition: Yup.number().required("Mời nhập học phí"),
+    detail: Yup.string().required("Mời nhập chi tiết khóa học"),
+    studyCondition: Yup.string().required("Mời nhập điều kiện học"),
+    studyObject: Yup.string().required("Mời nhập đối tượng học"),
+    duration: Yup.number().required("Mời nhập thời lượng khóa học"),
+    state: Yup.number().required("Mời nhập thời lượng khóa học"),
+    startDate: Yup.date()
     .nullable()
     .required("Mời chọn ngày bắt đầu")
     .min(
-      new Date(Date.now()),
-      "Ngày bắt đầu phải lớn hơn ngày hôm nay. Xin hãy chọn ngày khác"
-    ),
-  endDate: Yup.date()
-    .nullable()
-    .required("Mời chọn ngày kết thúc")
-    .min(
-      Yup.ref("startDate"),
-      "Ngày kết thúc không thể nhỏ hơn hoặc bằng ngày bắt, xin hãy chọn ngày khác"
+        new Date(Date.now()),
+        "Ngày bắt đầu phải lớn hơn ngày hôm nay. Xin hãy chọn ngày khác"
     ),
 });
 const CourseFormContainer = ({ initialCourseForm = {
@@ -58,8 +61,8 @@ const CourseFormContainer = ({ initialCourseForm = {
         console.log(message);
         if (result) {
             NotificationManager.success(
-                `${isUpdate ? "Updated" : "Created"} Successful Course ${message}`,
-                `${isUpdate ? "Update" : "Create"} Successful`,
+                `${isUpdate ? "Cập nhật" : "Thêm"} khóa học ${message} thành công`,
+                `${isUpdate ? "Cập nhật" : "Thêm"} thành công`,
                 2000
             );
 
@@ -67,7 +70,7 @@ const CourseFormContainer = ({ initialCourseForm = {
                 history.push(COURSE);
             }, 1000);
         } else {
-            NotificationManager.error(message, "Create failed", 2000);
+            NotificationManager.error(message, "Thêm không thành công", 2000);
         }
     };
 
@@ -123,15 +126,22 @@ const CourseFormContainer = ({ initialCourseForm = {
                         name="startDate"
                         label="Ngày bắt đầu"
                         isrequired="true" />
-                    <DateField
-                        id="endDate"
-                        name="endDate"
-                        label="Ngày kết thúc"
+                    <TextField
+                        id="duration"
+                        name="duration"
+                        label="Thời lượng (Buổi)"
+                        type="number"
+                        min="1"
                         isrequired="true" />
                     <TextField
                         id="studyCondition"
                         name="studyCondition"
                         label="Điều kiện học"
+                        isrequired="true" />
+                        <TextField
+                        id="studyObject"
+                        name="studyObject"
+                        label="Đối tượng học"
                         isrequired="true" />
                     <TextAreaField
                         id="content"
@@ -143,6 +153,14 @@ const CourseFormContainer = ({ initialCourseForm = {
                         name="detail"
                         label="Chi tiết khóa học"
                         isrequired="true" />
+                    <SelectField 
+                        id="state"
+                        name="state"
+                        label="Tình trạng khóa học"
+                        options = {CourseStateOptions}
+                        isrequired
+                        disabled={isUpdate?false:true}
+                    />
 
                     <div className="d-flex">
                         <div className="ml-auto">
